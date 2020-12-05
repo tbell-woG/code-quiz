@@ -1,13 +1,14 @@
 // Draw in page objects
-let highscoreDiv = document.querySelector("#highscores");
+let highscoreDiv = document.querySelector("#highscore");
 let quizTimerEl = document.querySelector("#quizTimer");
 let mainEl = document.querySelector("#details");
 let timerTab = document.querySelector("#timer");
 
+
 // let questionEl = document.querySelector("#question")
 // let answersListEl = document.querySelector("#answer-list")
 
-// set variables - how do we move these into localized
+// set global variables - how do we move these into localized
 var test = false;
 var score = 0;
 var quiz = {};
@@ -16,6 +17,10 @@ var quizType = "";
 var quizDuration = 0;
 var quizSecElapsed = 0;
 var quizInterval;
+
+var questionDuration = 15;
+var questionSecElapsed = 0;
+var questionInterval;
 
 // draw instruction
 init();
@@ -27,21 +32,21 @@ function init() {
   clearDetails();
   reset();
 
-  //Heading element for main page
+  // Heading element for main page
   let heading = document.createElement("p");
   heading.setAttribute("id", "main-heading");
   heading.textContent = "Quiz Instructions";
 
-  // Elements with the instructions for the quiz
+  // creates elements with the instructions for the quiz
   let instructions = document.createElement("p");
   instructions.setAttribute("id", "instructions");
   instructions.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your scoretime by ten seconds!";
 
-
-  // Button to start the quiz
+  // adding more question - this should move into loop or function
+  // creates button to start the quiz
   let startQuiz = document.createElement("button");
   startQuiz.setAttribute("id", "startQuiz");
-  startQuiz.setAttribute("class", "btn btn-secondary");
+  startQuiz.setAttribute("class", "btn btn-primary");
   startQuiz.textContent = "Start Quiz";
 
   mainEl.appendChild(heading);
@@ -54,7 +59,7 @@ function init() {
   });
 }
 
-// The function that clears the details element of all the children
+// function to clear details element of all children
 function clearDetails() {
   mainEl.innerHTML = "";
 }
@@ -66,40 +71,46 @@ function reset() {
   quizDuration = 0;
   quizSecElapsed = 0;
   quizInterval;
+
+  questionDuration = 15;
+  questionSecElapsed = 0;
+  questionInterval;
 }
 
-//Start the quiz
+//Start quiz
 function startQuestions(questionSet) {
-  if (test) { console.log("--- startQuiz ---"); }
+  if (test) { console.log("--- startQuestions ---"); }
+  // select quiz randomize questions
 
-  // Select random questions
   quiz = setUpQuestions(questionSet);
 
-  // Display the timer
+  // displays timers
   timerTab.setAttribute("style", "visibility: visible;");
 
-  // Start timer here
+  // Start timers here
   quizDuration = quiz.length * 15;
-  if (test) { console.log("duration g,q:", quizDuration); }
-
+  if (test) { console.log("duration q,q:", quizDuration, questionDuration); }
+  
   function startQuizTimer() {
     ///console.log("I am here in the startQuizTimer");
     //Create a setInterval function inside that runs every second and counts down a timer variable.
+    
   }
+
+  startQuizTimer();
 
   function renderTime() {
     ///console.log("I am here in the renderTime");
     //Create a setInterval function inside that runs every second and counts down a timer variable.
   }
-  
-  startQuizTimer();
+
   renderTime();
 
   //go to first question
   presentQuestion();
 }
 
-// Function to pull question out of the array
+// function to get random question out of array
 function setUpQuestions(arr) {
   if (test) { console.log("--- setUpQuestions ---"); }
 
@@ -111,17 +122,17 @@ function setUpQuestions(arr) {
   return ranQuest;
 }
 
-// Function to reset screen with question 
+// function to redraw screen with  question 
 function presentQuestion() {
   if (test) { console.log("--- presentQuestion ---"); }
   // if (test) {console.log("cur.choices[i] " + cur.choices);}
 
-  // Reset time allows to answer question
+  //reset time allows to answer question
   questionSecElapsed = 0;
 
-  // Checks for no more questions and exits
+  // checks for no more questions and exits
   if (quiz.length === 0) {
-    endOfGame();
+    endOfquiz();
     return;
   }
 
@@ -185,7 +196,7 @@ function scoreAnswer(cur) {
     } else {
       if (test) { console.log("wrong answer"); }
       //penelty for being wrong
-      gameDuration -= 10;
+      quizDuration -= 10;
     }
     if (test) { console.log("sselected ", selectedItem); }
     showAnswers(cur);
@@ -193,7 +204,7 @@ function scoreAnswer(cur) {
   }
 }
 
-// TODO incomplete does not disply the correct color
+// TODO incomplete does not disply the correct color!!!! arghh
 function showAnswers(cur) {
   if (test) { console.log("--- showAnswer ---"); }
   // if (test) { console.log("sa length",cur.choices.length);}
@@ -225,10 +236,175 @@ function showAnswers(cur) {
   setTimeout(presentQuestion, 500);
 }
 
-// function to set time for game timer
-function setGameTime() {
-  if (test) { console.log("--- setGameTime ---"); }
-  if (test) { console.log("gameDuration " + gameDuration); }
-  clearInterval(gameInterval);
-  gameSeconds = gameDuration;
+// function to set time for quiz timer
+function setQuizTime() {
+  if (test) { console.log("--- setQuizTime ---"); }
+  if (test) { console.log("quizDuration " + quizDuration); }
+  clearInterval(quizInterval);
+  quizSeconds = quizDuration;
 }
+
+
+function renderTime() {
+  // if (test) { console.log(" --- renderTime --- "); }
+  // if (test) { console.log("quizSecElapsed " + quizSecElapsed); }
+  // if (test) { console.log("quizDuration " + quizDuration); }
+  // if (test) { console.log("questionDuration " + questionDuration); }
+
+  quizTimerEl.textContent = quizDuration - quizSecElapsed;
+  quesTimerEl.textContent = questionDuration - questionSecElapsed;
+
+  if ((questionDuration - questionSecElapsed) < 1) {
+    // quiz penelty for letting timer run out
+    quizDuration -= 10;
+    if (test) { console.log("too slow"); }
+    presentQuestion();
+  }
+
+  if ((quizDuration - quizSecElapsed) < 1) {
+    endOfQuiz();
+  }
+}
+
+function startQuizTimer() {
+  if (test) { console.log("--- startQuizTimer ---"); }
+  setQuizTime();
+
+  quizInterval = setInterval(function () {
+    quizSecElapsed++;
+    questionSecElapsed++;
+    renderTime();
+  }, 1000);
+}
+
+function stopTime() {
+  if (test) { console.log("--- stopTime --- "); }
+  quizSeconds = 0;
+  questionSeconds = 0;
+  clearInterval(quizInterval);
+}
+
+// function of end of quiz
+function endOfQuiz() {
+  if (test) { console.log("--- endOfQuiz ---"); }
+  stopTime();
+  clearDetails();
+
+  timerTab.setAttribute("style", "visibility: hidden;");
+
+  let heading = document.createElement("p");
+  heading.setAttribute("id", "main-heading");
+  heading.textContent = "Time is up!";
+
+  // creates elements with the instructions for the quiz
+  let instructions = document.createElement("p");
+  instructions.setAttribute("id", "instructions");
+  instructions.textContent = " Your score is " + score;
+
+  // creates button to start the quiz
+  let quizAgain = document.createElement("button");
+  quizAgain.setAttribute("id", "quizAgain");
+  quizAgain.setAttribute("class", "btn btn-secondary");
+  quizAgain.textContent = "Take quiz again";
+
+  // creates input for user to add initials
+  let par = document.createElement("p");
+
+  let initialsLabel = document.createElement("label");
+  initialsLabel.setAttribute("for", "userInitials");
+  initialsLabel.textContent = "Enter Initials: ";
+
+  let initialsInput = document.createElement("input");
+  initialsInput.setAttribute("id", "userInitials");
+  initialsInput.setAttribute("name", "userInitials");
+  initialsInput.setAttribute("minlength", "3");
+  initialsInput.setAttribute("maxlength", "3");
+  initialsInput.setAttribute("size", "3");
+
+
+  mainEl.appendChild(heading);
+  mainEl.appendChild(instructions);
+  mainEl.appendChild(initialsLabel);
+  mainEl.appendChild(initialsInput);
+  mainEl.appendChild(par);
+  mainEl.appendChild(quizAgain);
+
+  quizAgain.addEventListener("click", init);
+
+  initialsInput.addEventListener("input", function () {
+    initialsInput.value = initialsInput.value.toUpperCase();
+    if (initialsInput.value.length === 3) {
+
+      //create object for this score
+      let thisScore = [{ type: quizType, name: initialsInput.value, score: score }];
+
+      //get highscores from memory
+      let storedScores = JSON.parse(localStorage.getItem("highScores"));
+      if (test) { console.log("storedScore", storedScores); }
+
+      if (storedScores !== null) {
+        storedScores.push(thisScore[0]);
+      } else {
+        storedScores = thisScore;
+      }
+
+      localStorage.setItem("highScores", JSON.stringify(storedScores));
+      highScores();
+    }
+  });
+}
+
+function highScores() {
+  stopTime();
+  clearDetails();
+
+  timerTab.setAttribute("style", "visibility: hidden;");
+
+  //get scores from storage
+  let storedScores = JSON.parse(localStorage.getItem("highScores"));
+
+  // draw heading
+  let heading = document.createElement("h2");
+  heading.setAttribute("id", "main-heading");
+  heading.textContent = "Top 5 High Score Hall of Fame";
+
+  mainEl.appendChild(heading);
+
+  // Render a new li for each score
+  // TODO check for this error 
+  if (storedScores !== null) {
+    // sort scores
+    storedScores.sort((a, b) => (a.score < b.score) ? 1 : -1);
+
+    // sets the number of scores to display to 5 or the number of quizes played. Which ever is less
+    let numScores2Display = 5;
+    if (storedScores.length < 5) {
+      numScores2Display = storedScores.length;
+    }
+
+    for (var i = 0; i < numScores2Display; i++) {
+      var s = storedScores[i];
+
+      var p = document.createElement("p");
+      p.textContent = s.name + " " + s.score + " ( " + s.type + " )";
+      mainEl.appendChild(p);
+    }
+  } else {
+    var p = document.createElement("p");
+    p.textContent = "Your Initials Here!"
+    mainEl.appendChild(p);
+  }
+
+
+  // creates button to start the quiz
+  let quizAgain = document.createElement("button");
+  quizAgain.setAttribute("id", "quizAgain");
+  quizAgain.setAttribute("class", "btn btn-secondary");
+  quizAgain.textContent = "Take the Quiz!";
+
+  mainEl.appendChild(quizAgain);
+
+  quizAgain.addEventListener("click", init);
+}
+
+highscoreDiv.addEventListener("click", highScores);
