@@ -1,5 +1,5 @@
-// Draw in page objects
-let highscoreDiv = document.querySelector("#highscore");
+// draw in page objects
+let highscoreDiv = document.querySelector("#highscores");
 let quizTimerEl = document.querySelector("#quizTimer");
 let mainEl = document.querySelector("#details");
 let timerTab = document.querySelector("#timer");
@@ -8,7 +8,7 @@ let timerTab = document.querySelector("#timer");
 // let questionEl = document.querySelector("#question")
 // let answersListEl = document.querySelector("#answer-list")
 
-// set global variables - how do we move these into localized
+// set global variables
 var test = false;
 var score = 0;
 var quiz = {};
@@ -84,12 +84,14 @@ function startQuestions(questionSet) {
 
   quiz = setUpQuestions(questionSet);
 
-  // displays timers
+  // displays timer
   timerTab.setAttribute("style", "visibility: visible;");
 
-  // Start timers here
+  // Start timer here
   quizDuration = quiz.length * 15;
   if (test) { console.log("duration q,q:", quizDuration, questionDuration); }
+
+  startQuizTimer();
 
   function startQuizTimer() {
     ///console.log("I am here in the startQuizTimer");
@@ -97,14 +99,12 @@ function startQuestions(questionSet) {
 
   }
 
-  startQuizTimer();
+  renderTime();
 
   function renderTime() {
     ///console.log("I am here in the renderTime");
     //Create a setInterval function inside that runs every second and counts down a timer variable.
   }
-
-  renderTime();
 
   //go to first question
   presentQuestion();
@@ -134,6 +134,10 @@ function presentQuestion() {
   if (quiz.length === 0) {
     endOfquiz();
     return;
+
+    function endOfquiz() {
+      ///console.log("I am here in the endOfquiz");      
+    }
   }
 
   // call question timer here
@@ -192,7 +196,7 @@ function scoreAnswer(cur) {
     if (selectedItem === cur.answer) {
       // if (test) { console.log("correct answer");}
       score += questionDuration - questionSecElapsed;
-      //TODO music 
+
     } else {
       if (test) { console.log("wrong answer"); }
       //penelty for being wrong
@@ -204,12 +208,11 @@ function scoreAnswer(cur) {
   }
 }
 
-// TODO incomplete does not disply the correct color!!!! arghh
 function showAnswers(cur) {
   if (test) { console.log("--- showAnswer ---"); }
   // if (test) { console.log("sa length",cur.choices.length);}
-  if (test) { console.log("sa qanda", cur); }
-  if (test) { console.log("sselected ", selectedItem); }
+  if (test) { console.log("see asnwer", cur); }
+  if (test) { console.log("see selected ", selectedItem); }
 
 
   for (let i = 0; i < cur.choices.length; i++) {
@@ -233,7 +236,7 @@ function showAnswers(cur) {
     }
   }
   // pause so user can see results
-  setTimeout(presentQuestion, 500);
+  setTimeout(presentQuestion, 75);
 }
 
 // function to set time for quiz timer
@@ -304,7 +307,7 @@ function endOfQuiz() {
   // creates button to start the quiz
   let quizAgain = document.createElement("button");
   quizAgain.setAttribute("id", "quizAgain");
-  quizAgain.setAttribute("class", "btn btn-secondary");
+  quizAgain.setAttribute("class", "btn btn-primary");
   quizAgain.textContent = "Take quiz again";
 
   // creates input for user to add initials
@@ -366,12 +369,11 @@ function highScores() {
   // draw heading
   let heading = document.createElement("h2");
   heading.setAttribute("id", "main-heading");
-  heading.textContent = "Top 5 High Score Hall of Fame";
+  heading.textContent = "Top 5 High Scores";
 
   mainEl.appendChild(heading);
 
   // Render a new li for each score
-  // TODO check for this error 
   if (storedScores !== null) {
     // sort scores
     storedScores.sort((a, b) => (a.score < b.score) ? 1 : -1);
@@ -399,7 +401,7 @@ function highScores() {
   // creates button to start the quiz
   let quizAgain = document.createElement("button");
   quizAgain.setAttribute("id", "quizAgain");
-  quizAgain.setAttribute("class", "btn btn-secondary");
+  quizAgain.setAttribute("class", "btn btn-primary");
   quizAgain.textContent = "Take the Quiz!";
 
   mainEl.appendChild(quizAgain);
