@@ -89,7 +89,7 @@ function startQuestions(questionSet) {
 
   // Start timer here
   quizDuration = quiz.length * 15;
-  if (test) { console.log("duration q,q:", quizDuration, questionDuration); }
+  if (test) { console.log("duration ,q:", quizDuration, questionDuration); }
 
   startQuizTimer();
 
@@ -105,6 +105,21 @@ function startQuestions(questionSet) {
     ///console.log("I am here in the renderTime");
     //Create a setInterval function inside that runs every second and counts down a timer variable.
   }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const quizTimerDisplay = document.querySelector("quiz-timer")
+    quizTimer = 10
+
+    function countDown(){
+      setInterval(function(){
+        if(quizTimer <= 0 ) {
+          clearInterval(quizTimer = 0)
+        }
+        quizTimerDisplay.innerHTML = quizTimer
+        quizTime -=1
+      }, 1000)
+    }
+  })
 
   //go to first question
   presentQuestion();
