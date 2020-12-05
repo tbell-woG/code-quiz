@@ -1,16 +1,25 @@
 header {
-    color: purple;
+    color: yellow;
     font-size: 18px;
     text-align: left;
     margin-top: -10px;
+    margin-left: -25px;
     padding: 2%;
 }
 
+h1 {
+  color: yellow;
+  font-size: 18px;
+  text-align: center;
+  margin-left: -25px;
+}
+
 table {
-    color: purple;
+    color: yellow;
     font-size: 18px;
     text-align: right;
     margin-top: -15px;
+    margin-left: -50px;
     padding: 2%;
 }
 
@@ -19,3 +28,8 @@ section {
   padding-top: 60px;
   text-align: center;
 }
+
+.nav-link:hover {  
+  color: #666;
+}
+

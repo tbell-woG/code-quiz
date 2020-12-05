@@ -90,11 +90,11 @@ function startQuestions(questionSet) {
   // Start timers here
   quizDuration = quiz.length * 15;
   if (test) { console.log("duration q,q:", quizDuration, questionDuration); }
-  
+
   function startQuizTimer() {
     ///console.log("I am here in the startQuizTimer");
     //Create a setInterval function inside that runs every second and counts down a timer variable.
-    
+
   }
 
   startQuizTimer();
@@ -229,7 +229,7 @@ function showAnswers(cur) {
       questrow.setAttribute("style", "background-color: red");
     } else {
       if (test) { console.log("color test true"); }
-      questrow.setAttribute("style", "background-color: green");
+      questrow.setAttribute("style", "background-color: yellow");
     }
   }
   // pause so user can see results
